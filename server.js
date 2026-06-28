@@ -1,0 +1,108 @@
+const multer = require("multer");
+const cloudinary = require("cloudinary").v2;
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+mongoose.connect("mongodb://sanitation_user:Rufiji2005@ac-qmhtjqg-shard-00-00.6fhrb7b.mongodb.net:27017,ac-qmhtjqg-shard-00-01.6fhrb7b.mongodb.net:27017,ac-qmhtjqg-shard-00-02.6fhrb7b.mongodb.net:27017/?ssl=true&replicaSet=atlas-1u79vi-shard-0&authSource=admin&appName=Sanitation")
+.then(()=>{
+console.log("MongoDB connected");
+})
+.catch((error)=>{
+console.log(error);
+});
+const upload = multer({
+ storage: multer.memoryStorage()
+});
+
+
+cloudinary.config({
+
+cloud_name:"rabp6udv",
+
+api_key:"273335543533961",
+
+api_secret:"-VDiaTMPgFLDgu4X0tGHzlCJruM"
+
+});
+
+const reportSchema = new mongoose.Schema({
+    name: String,
+    region: String,
+    district: String,
+    date: String,
+    problem: String,
+    rating: String,
+    image: String
+});
+
+const Report = mongoose.model("Report", reportSchema);
+app.post("/submit", upload.single("image"), async(req,res)=>{
+   console.log(req.body);
+console.log(req.file);
+ 
+    try{
+
+        const uploadImage = await cloudinary.uploader.upload(
+"data:image/png;base64," + req.file.buffer.toString("base64")
+);
+
+
+const newReport = new Report({
+
+name:req.body.name,
+
+region:req.body.region,
+
+district:req.body.district,
+
+date:req.body.date,
+
+problem:req.body.problem,
+
+rating:req.body.rating,
+
+image: uploadImage.secure_url
+
+});
+
+
+await newReport.save();
+
+        res.json({
+            message:"Data saved successfully"
+        });
+
+    }catch(error){
+
+        res.status(500).json({
+            error:error.message
+        });
+
+    }
+
+});
+
+app.use(cors());
+app.use(express.json());
+
+
+app.get("/", (req,res)=>{
+
+    res.send("Sanitation System Backend is Running 🚀");
+
+});
+
+
+const PORT = 5000;
+
+
+app.listen(PORT, ()=>{
+
+    console.log("Server running on port " + PORT);
+
+});
