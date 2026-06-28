@@ -255,7 +255,7 @@ document.getElementById("submitBtn").addEventListener("click", function(e){
     };
 
 
-    fetch("http://localhost:5000/submit", {
+    fetch("https://sanitation-system.onrender.com/api/report", {
 
     method: "POST",
 
