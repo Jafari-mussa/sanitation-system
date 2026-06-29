@@ -167,16 +167,17 @@ formData.append("date", document.getElementById("date").value);
 formData.append("problem", document.getElementById("problem").value);
 formData.append("rating", document.getElementById("rateSelect").value);
 
-const image = document.getElementById("image").files[0];
-formData.append("image", image);
-
-fetch("https://sanitation-system.onrender.com/api/report", {
+const image = document.getElementById("image");
+if(image && image.files[0]){
+formData.append("image", image.files[0]);
+}
+fetch("https://sanitation-system.onrender.com/submit", {
 method: "POST",
 body: formData
 })
 .then(response => response.json())
 .then(data => {
-alert(data.message);
+alert(JSON.stringify(data));
 })
 .catch(error => {
 console.log(error);
