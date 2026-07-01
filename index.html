@@ -20,26 +20,35 @@
   English
 </button>
 
+
 <button type="button" onclick="changeLanguage('sw')">
   Kiswahili
 </button>
 
+
+
 <h1 id="title">Sanitation Feedback Form</h1>
+
 
 
 <label id="nameLabel">Name</label>
 <input type="text" id="name" placeholder="Enter your name">
 
 
+
 <label id="regionLabel">Region</label>
 <input type="text" id="region" placeholder="Enter region">
+
 
 
 <label id="districtLabel">District</label>
 <input type="text" id="district" placeholder="Enter district">
 
+
+
 <label id="streetLabel">Street</label>
-<input type="text" id="Street" placeholder="Enter Street">
+<input type="text" id="street" placeholder="Enter Street">
+
 
 
 <label id="dateLabel">Date</label>
@@ -47,34 +56,51 @@
 
 
 
+
+
 <label id="rateLabel">Rate Service</label>
+
 <select id="rateSelect">
-  <option> 1 - Poor</option>
-  <option> 2 - Fair</option>
-  <option> 3 - Good</option>
-  <option> 4 - Very Good</option>
-  <option> 5 - Excellent</option>
+
+<option>1 - Poor</option>
+<option>2 - Fair</option>
+<option>3 - Good</option>
+<option>4 - Very Good</option>
+<option>5 - Excellent</option>
+
 </select>
 
+
+
+
 <label id="problemLabel">Problem</label>
+
 <textarea id="problem" placeholder="Write feedback"></textarea>
 
 
 
 
+
+
 <label id="photoLabel">
+
 Upload Photo Evidence
+
 </label>
+
 
 
 <br><br>
 
 
-<button type="button" onclick="openCamera()">
+
+
+<button id="cameraBtn" type="button" onclick="openCamera()">
 
 📷 Open Camera
 
 </button>
+
 
 
 
@@ -86,13 +112,18 @@ Upload Photo Evidence
 
 
 
+
 <br><br>
 
 
-<video id="camera"  autoplay playsinline></video>
+
+<video id="camera" autoplay playsinline></video>
+
+
 
 
 <br>
+
 
 
 <button id="captureBtn" type="button" onclick="takePhoto()">
@@ -103,24 +134,41 @@ Capture Photo
 
 
 
+
+
 <br><br>
+
 
 
 <canvas id="photoCanvas" width="300" height="200"></canvas>
 
 
 
-<br><br>
-
-
-<input type="file" accept="image/*">
-
 
 
 <br><br>
 
 
-<button id="submitBtn" type="submit">
+
+<input type="file" id="image" accept="image/*">
+
+
+
+
+
+<br><br>
+
+
+
+<input type="hidden" id="latitude">
+
+<input type="hidden" id="longitude">
+
+
+
+
+
+<button id="submitBtn" type="button">
 
 Submit Feedback
 
@@ -128,12 +176,19 @@ Submit Feedback
 
 
 
+
+
+
 </form>
+
+
 
 
 <script src="https://unpkg.com/parse/dist/parse.min.js"></script>
 
+
 <script src="script.js"></script>
+
 
 
 </body>

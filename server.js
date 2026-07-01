@@ -31,12 +31,14 @@ date: String,
 problem: String,
 rating: String,
 image: String
+latitude: String,
+longitude: String,
 });
 
 const Report = mongoose.model("Report", reportSchema);
 
 
-// ===================== SAFE SUBMIT ROUTE =====================
+
 app.post("/submit", upload.single("image"), async (req, res) => {
 
 try {
@@ -46,7 +48,6 @@ console.log("FILE:", req.file);
 
 let imageUrl = "";
 
-// SAFE CHECK (NO CRASH EVER)
 if (req.file && req.file.buffer) {
 
 const uploadImage = await cloudinary.uploader.upload(
@@ -63,7 +64,9 @@ district: req.body.district,
 date: req.body.date,
 problem: req.body.problem,
 rating: req.body.rating,
-image: imageUrl
+image: imageUrl,
+latitude:req.body.latitude,
+longitude:req.body.longitude
 });
 
 await newReport.save();

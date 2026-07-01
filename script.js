@@ -103,6 +103,19 @@ document.getElementById("rateSelect").innerHTML = `
 let currentCamera = "user";
 let currentStream;
 
+navigator.geolocation.getCurrentPosition(function
+(position){
+
+document.getElementById("latitude").value=positio
+n.coords.latitude;
+document.getElementById("longitude").value=positi
+on.coords.longitude;
+
+},function(error){
+
+console.log(error.message);
+});
+
 function openCamera(){
 
 navigator.mediaDevices.getUserMedia({
@@ -166,6 +179,10 @@ formData.append("district", document.getElementById("district").value);
 formData.append("date", document.getElementById("date").value);
 formData.append("problem", document.getElementById("problem").value);
 formData.append("rating", document.getElementById("rateSelect").value);
+formData.append("latitude",
+document.getElementById("latitude").value);
+formData.append("longitude",
+document.getElementById("longitude").value);
 
 const image = document.getElementById("image");
 if(image && image.files[0]){
