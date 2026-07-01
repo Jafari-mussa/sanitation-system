@@ -30,7 +30,7 @@ district: String,
 date: String,
 problem: String,
 rating: String,
-image: String
+image: String,
 latitude: String,
 longitude: String,
 });
