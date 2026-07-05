@@ -130,7 +130,7 @@ error:error.message
 
 const PORT = 5000;
 
-app.get("*", (req, res) => {
+app.get("/*", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
