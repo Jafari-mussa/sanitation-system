@@ -216,7 +216,7 @@ formData.append("image", capturedBlob,"camera.jpg");
 formData.append("image", image.files[0]);
 
 }
-fetch("https://sanitation-system.onrender.com/submit", {
+fetch("https://sanitation-system-1.onrender.com/submit", {
 method: "POST",
 body: formData
 })

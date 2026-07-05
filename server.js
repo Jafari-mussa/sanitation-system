@@ -63,15 +63,26 @@ let imageUrl = "";
 
 if (req.file && req.file.buffer) {
 
-const uploadImage = await cloudinary.uploader.upload(
-  "data:image/png;base64," + req.file.buffer.toString("base64"),
-  {
-    folder: "sanitation_system"
-  }
+const uploadImage = await new Promise((resolve, reject) => {
+
+const stream = cloudinary.uploader.upload_stream(
+{
+folder: "sanitation_system"
+},
+(error, result) => {
+
+if(error) reject(error);
+
+else resolve(result);
+
+}
 );
 
+stream.end(req.file.buffer);
+
+});
+
 imageUrl = uploadImage.secure_url;
-}
 
 const newReport = new Report({
 name: req.body.name,
