@@ -54,67 +54,62 @@ const Report = mongoose.model("Report", reportSchema);
 
 app.post("/submit", upload.single("image"), async (req, res) => {
 
-try {
+  try {
 
-console.log("BODY:", req.body);
-console.log("FILE:", req.file);
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
 
-let imageUrl = "";
+    let imageUrl = "";
 
-if (req.file && req.file.buffer) {
+    if (req.file && req.file.buffer) {
 
-const uploadImage = await new Promise((resolve, reject) => {
+      const uploadImage = await new Promise((resolve, reject) => {
 
-const stream = cloudinary.uploader.upload_stream(
-{
-folder: "sanitation_system"
-},
-(error, result) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "sanitation_system" },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
 
-if(error) reject(error);
+        stream.end(req.file.buffer);
 
-else resolve(result);
+      });
 
-}
-);
+      imageUrl = uploadImage.secure_url;
+    }
 
-stream.end(req.file.buffer);
+    const newReport = new Report({
+      name: req.body.name,
+      region: req.body.region,
+      district: req.body.district,
+      date: req.body.date,
+      problem: req.body.problem,
+      rating: req.body.rating,
+      image: imageUrl,
+      latitude: req.body.latitude,
+      longitude: req.body.longitude
+    });
 
-});
+    await newReport.save();
 
-imageUrl = uploadImage.secure_url;
+    return res.json({
+      message: "Data saved successfully"
+    });
 
-const newReport = new Report({
-name: req.body.name,
-region: req.body.region,
-district: req.body.district,
-date: req.body.date,
-problem: req.body.problem,
-rating: req.body.rating,
-image: imageUrl,
-latitude:req.body.latitude,
-longitude:req.body.longitude
-});
+  } catch (error) {
 
-await newReport.save();
+    console.log("ERROR:", error);
 
-return res.json({
-message: "Data saved successfully"
-});
+    return res.status(500).json({
+      message: "Server error",
+      error: error.message
+    });
 
-} catch (error) {
-
-console.log("ERROR:", error);
-
-return res.status(500).json({
-message: "Server error",
-error: error.message
-});
-
-}
+  }
 
 });
-
 
 app.get("/", (req, res) => {
 res.send("Sanitation System Backend is Running 🚀");
