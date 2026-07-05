@@ -102,19 +102,34 @@ document.getElementById("rateSelect").innerHTML = `
 
 let currentCamera = "user";
 let currentStream;
+let capturedBlob = null;
 
-navigator.geolocation.getCurrentPosition(function
-(position){
+navigator.geolocation.getCurrentPosition(
+function(position){
 
-document.getElementById("latitude").value=positio
-n.coords.latitude;
-document.getElementById("longitude").value=positi
-on.coords.longitude;
+document.getElementById("latitude").value = position.coords.latitude;
 
-},function(error){
+document.getElementById("longitude").value = position.coords.longitude;
 
-console.log(error.message);
-});
+console.log("LATITUDE:", position.coords.latitude);
+
+console.log("LONGITUDE:", position.coords.longitude);
+
+},
+
+function(error){
+
+console.log("LOCATION ERROR:", error.message);
+
+},
+
+{
+enableHighAccuracy:true,
+timeout:10000,
+maximumAge:0
+}
+
+);
 
 function openCamera(){
 
@@ -164,9 +179,15 @@ const context = canvas.getContext("2d");
 
 context.drawImage(video,0,0,canvas.width,canvas.height);
 
-alert("Photo captured successfully");
-}
+canvas.toBlob(function(blob){
 
+capturedBlob = blob;
+
+alert("Photo captured successfully");
+
+},"image/jpeg");
+
+}
 document.getElementById("submitBtn").addEventListener("click", function(e){
 
 e.preventDefault();
@@ -185,8 +206,15 @@ formData.append("longitude",
 document.getElementById("longitude").value);
 
 const image = document.getElementById("image");
-if(image && image.files[0]){
+
+if(capturedBlob){
+
+formData.append("image", capturedBlob,"camera.jpg");
+
+}else if(image && image.files[0]){
+
 formData.append("image", image.files[0]);
+
 }
 fetch("https://sanitation-system.onrender.com/submit", {
 method: "POST",

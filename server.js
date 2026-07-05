@@ -1,3 +1,5 @@
+require('dotenv').config(); 
+
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
 const express = require("express");
@@ -9,6 +11,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+cloudinary.config({ 
+  cloud_name: process.env.CLOUD_NAME, 
+  api_key: process.env.API_KEY, 
+  api_secret: process.env.API_SECRET 
+});
+
+
 mongoose.connect("mongodb://sanitation_user:Rufiji2005@ac-qmhtjqg-shard-00-00.6fhrb7b.mongodb.net:27017,ac-qmhtjqg-shard-00-01.6fhrb7b.mongodb.net:27017,ac-qmhtjqg-shard-00-02.6fhrb7b.mongodb.net:27017/?ssl=true&replicaSet=atlas-1u79vi-shard-0&authSource=admin&appName=Sanitation")
 .then(() => console.log("MongoDB connected"))
 .catch(err => console.log(err));
@@ -16,11 +25,7 @@ mongoose.connect("mongodb://sanitation_user:Rufiji2005@ac-qmhtjqg-shard-00-00.6f
 
 const upload = multer({ storage: multer.memoryStorage() });
 
-cloudinary.config({
-cloud_name: "rabp6udv",
-api_key: "273335543533961",
-api_secret: "-VDiaTMPgFLDgu4X0tGHzlCJruM"
-});
+
 
 
 const reportSchema = new mongoose.Schema({
@@ -51,7 +56,10 @@ let imageUrl = "";
 if (req.file && req.file.buffer) {
 
 const uploadImage = await cloudinary.uploader.upload(
-"data:image/png;base64," + req.file.buffer.toString("base64")
+  "data:image/png;base64," + req.file.buffer.toString("base64"),
+  {
+    folder: "sanitation_system"
+  }
 );
 
 imageUrl = uploadImage.secure_url;
@@ -91,6 +99,23 @@ error: error.message
 
 app.get("/", (req, res) => {
 res.send("Sanitation System Backend is Running 🚀");
+});
+app.get("/reports", async(req,res)=>{
+
+try{
+
+const reports = await Report.find();
+
+res.json(reports);
+
+}catch(error){
+
+res.status(500).json({
+error:error.message
+});
+
+}
+
 });
 
 

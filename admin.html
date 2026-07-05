@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+font-family:Arial;
+padding:20px;
+}
+
+h1{
+text-align:center;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th{
+background:#333;
+color:white;
+padding:12px;
+}
+
+td{
+border:1px solid #ccc;
+padding:10px;
+}
+
+tr:nth-child(even){
+background:#f2f2f2;
+}
+
+canvas{
+max-width:800px;
+margin:30px auto;
+display:block;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Sanitation Admin Dashboard</h1>
+
+<canvas id="ratingChart"></canvas>
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Region</th>
+<th>District</th>
+<th>Date</th>
+<th>Problem</th>
+<th>Rating</th>
+<th>Latitude</th>
+<th>Longitude</th>
+<th>Image</th>
+
+</tr>
+
+</thead>
+
+<tbody id="reportTable">
+
+</tbody>
+
+</table>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+fetch("http://localhost:5000/reports")
+
+.then(response=>response.json())
+
+.then(data=>{
+
+let rows="";
+
+let ratings=[0,0,0,0,0];
+
+data.forEach(report=>{
+
+if(report.rating){
+
+let number=parseInt(report.rating);
+
+if(number>=1 && number<=5){
+
+ratings[number-1]++;
+
+}
+
+}
+
+rows += `
+
+<tr>
+
+<td>${report.name || ""}</td>
+
+<td>${report.region || ""}</td>
+
+<td>${report.district || ""}</td>
+
+<td>${report.date || ""}</td>
+
+<td>${report.problem || ""}</td>
+
+<td>${report.rating || ""}</td>
+
+<td>${report.latitude || ""}</td>
+
+<td>${report.longitude || ""}</td>
+
+<td>
+<a href="${report.image}" target="_blank">
+<img src="${report.image}" width="80" height="60">
+</a>
+</td>
+
+</tr>
+
+`;
+
+});
+
+document.getElementById("reportTable").innerHTML=rows;
+
+new Chart(document.getElementById("ratingChart"),{
+
+type:"bar",
+
+data:{
+
+labels:[
+"1 Poor",
+"2 Fair",
+"3 Good",
+"4 Very Good",
+"5 Excellent"
+],
+
+datasets:[{
+
+label:"Service Ratings",
+
+data:ratings,
+
+backgroundColor:[
+"#e74c3c",
+"#f39c12",
+"#87ceeb",
+"#7f00ff",
+"#27ae60"
+]
+
+}]
+
+},
+
+options:{
+
+responsive:true,
+
+plugins:{
+
+legend:{
+display:false
+}
+
+}
+
+}
+
+});
+
+})
+
+.catch(error=>{
+
+console.log(error);
+
+});
+
+</script>
+
+</body>
+
+</html>
