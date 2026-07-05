@@ -17,6 +17,11 @@ cloudinary.config({
   api_secret: process.env.API_SECRET 
 });
 
+console.log("=== ENV CHECK ===");
+console.log("CLOUD_NAME:", process.env.CLOUD_NAME || "HAIPO");
+console.log("API_KEY:", process.env.API_KEY || "HAIPO");
+console.log("API_SECRET:", process.env.API_SECRET ? "IPO" : "HAIPO");
+
 
 mongoose.connect("mongodb://sanitation_user:Rufiji2005@ac-qmhtjqg-shard-00-00.6fhrb7b.mongodb.net:27017,ac-qmhtjqg-shard-00-01.6fhrb7b.mongodb.net:27017,ac-qmhtjqg-shard-00-02.6fhrb7b.mongodb.net:27017/?ssl=true&replicaSet=atlas-1u79vi-shard-0&authSource=admin&appName=Sanitation")
 .then(() => console.log("MongoDB connected"))
