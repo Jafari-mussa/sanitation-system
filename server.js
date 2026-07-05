@@ -14,13 +14,6 @@ app.use(cors());
 app.use(express.json());
 
 
-const uploadImage = await cloudinary.uploader.upload(
-  "data:image/jpeg;base64," + req.file.buffer.toString("base64"),
-  {
-    upload_preset: "sanitation_system"
-  }
-);
-
 console.log("=== ENV CHECK ===");
 console.log("CLOUD_NAME:", process.env.CLOUD_NAME || "HAIPO");
 console.log("API_KEY:", process.env.API_KEY || "HAIPO");
